@@ -52,6 +52,7 @@
     import android.content.Intent;
     import android.content.res.Resources;
     import android.os.Binder;
+    import android.os.Build;
     import android.os.Bundle;
     import android.os.IBinder;
     import android.util.Log;
@@ -381,7 +382,9 @@
                 }catch (InterruptedException ex){
                     Thread.currentThread().interrupt();
                 }
-                status = mBluetoothGatt.requestMtu(mtu);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    status = mBluetoothGatt.requestMtu(mtu);
+                }
                 retry--;
                 Log.w(TAG,"Amtusize-"+mtu);
             }

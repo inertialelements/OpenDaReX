@@ -42,6 +42,7 @@
 
     package com.inertialelements.opendarex;
 
+    import android.Manifest;
     import android.app.Activity;
     import android.bluetooth.BluetoothGattCharacteristic;
     import android.bluetooth.BluetoothGattService;
@@ -51,18 +52,21 @@
     import android.content.Intent;
     import android.content.IntentFilter;
     import android.content.ServiceConnection;
+    import android.content.pm.PackageManager;
     import android.os.Build;
     import android.os.Bundle;
     import android.os.Handler;
     import android.os.IBinder;
     import android.os.SystemClock;
     import android.os.Vibrator;
+    import android.support.v4.app.ActivityCompat;
     import android.util.Log;
     import android.view.Menu;
     import android.view.MenuItem;
     import android.view.View;
     import android.widget.Button;
     import android.widget.TextView;
+    import android.widget.Toast;
 
     import java.nio.ByteBuffer;
     import java.text.DecimalFormat;
@@ -84,6 +88,7 @@
 
         public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
         public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+        private static final int REQUEST_PERMISSIONS_LOG_STORAGE = 1003;
         private static final String send = "0x34 0x00 0x34";
         private static final String sys_off = "0x32 0x00 0x32";
         private static final String pro_off = "0x22 0x00 0x22";
@@ -98,6 +103,7 @@
         long timeSec;
         double Avgspeed;
         double speednow = 0;
+
 
         int step_counter,package_number,package_number_1,package_number_2,package_number_old=0;
         int[] header= {0,0,0,0};
@@ -229,7 +235,7 @@
                         stepwise_dr_tu();
                         // Log.e(TAG, "final data sent" + final_data[0] + " " + final_data[1] + " "+final_data[2]);
                         c = Calendar.getInstance();
-                        sdf = new SimpleDateFormat("HHmmss");
+                        sdf = new SimpleDateFormat("HHmmss", Locale.US);
                         // long timeSec= (c.getTimeInMillis()-filenameDate.getTimeInMillis());
                         if(timeSec != timeSec1)
                         {
@@ -248,7 +254,10 @@
                             speednow = (distance1*3.6)/(timeSec3/1000);
                             Avgspeed = distance*3.6/(timeSec6/1000);
                             StepD = timeSec6/step_counter; //stepDuration
-                           }
+
+                            StepData stepData = new StepData(step_counter,final_data[0],final_data[1],final_data[2],distance);
+                            Utilities.writeDataToLog(getApplicationContext(),stepData);
+                        }
                         package_number_old=package_number;
                     }
                     mstepcount.setText(" "+step_counter);
@@ -256,6 +265,7 @@
                     x.setText(" " + df1.format(final_data[0]));//x
                     y.setText(" " + df1.format(final_data[1]));//y
                     z.setText(" " + df1.format(final_data[2]));//Z
+
                 }
                 // END - Added by GT Silicon - END //
             }
@@ -265,6 +275,8 @@
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState); setContentView(R.layout.bluetooth_chat);
             final Intent intent = getIntent();
+
+            checkAndRequestWriteLog();
             mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
             mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
             mstepcount = (TextView) findViewById(R.id.stepcount);
@@ -576,6 +588,36 @@
                 localStringBuilder1.append(str2);
                 localStringBuilder1.append(" ");
                 i += 1;
+            }
+        }
+
+        /**
+         * Check the permission whether app can create or write files. If permission is not granted,
+         * then request user to grant write storage permission otherwise will create log file and write data.
+         */
+        private void checkAndRequestWriteLog(){
+            if (Build.VERSION.SDK_INT >= 23){
+                if ( ActivityCompat.checkSelfPermission(DeviceControlActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED ) {
+                    Utilities.writeHeaderToLog(getApplicationContext());
+                }else{
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS_LOG_STORAGE);
+                }
+            }else{
+                Utilities.writeHeaderToLog(getApplicationContext());
+            }
+        }
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+            switch (requestCode) {
+                case REQUEST_PERMISSIONS_LOG_STORAGE:
+                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED ) {
+                        Utilities.writeHeaderToLog(getApplicationContext());
+                    } else {
+                        Toast.makeText(DeviceControlActivity.this, "Required storage permission  are disable.", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
             }
         }
     }
