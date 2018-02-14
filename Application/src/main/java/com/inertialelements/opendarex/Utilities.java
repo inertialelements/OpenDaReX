@@ -44,7 +44,7 @@ public class Utilities {
         Date now = new Date();
         LOG_FILE_NAME = "LOG_FILE " + formatter.format(now) + ".txt";//like LOG_FILE_20181502_130316.txt
         try {
-            String path = getAppName(context) + File.separator + LOG_DIR;
+            String path = context.getPackageName() + File.separator + LOG_DIR;
             File root = createDirIfNotExists(path);
             if(root==null){
                 LOG_FILE_NAME = null;
@@ -148,7 +148,7 @@ public class Utilities {
         try
         {
             if(LOG_FILE_NAME!=null && LOG_FILE_NAME.length() > 0){
-                String path = File.separator + getAppName(context) + File.separator  + LOG_DIR + File.separator ;
+                String path = File.separator + context.getPackageName() + File.separator  + LOG_DIR + File.separator ;
                 //File root = new File(Environment.getExternalStorageDirectory()+File.separator+ MainActivity.parentDir, MainActivity.logDir);
                 //File root = new File(Environment.getExternalStorageDirectory(), "Notes");
                 File root = createDirIfNotExists(path);
@@ -176,7 +176,5 @@ public class Utilities {
         }
     }
 
-    private static String getAppName(Context context){
-        return context.getResources().getString(R.string.app_name);
-    }
+
 }
