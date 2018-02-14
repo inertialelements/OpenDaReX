@@ -50,11 +50,6 @@ public class Utilities {
                 LOG_FILE_NAME = null;
                 return;
             }else {
-//                root.mkdirs();
-//                root.setExecutable(true);
-//                root.setReadable(true);
-//                root.setWritable(true);
-
                 // code to make the files visible on the PC using MTP protocol
                 if(root.setExecutable(true)&&root.setReadable(true)&&root.setWritable(true)){
                     Log.i("SET FILE PERMISSION ", "Set read , write and execuatable permission for log file");
@@ -149,12 +144,10 @@ public class Utilities {
         {
             if(LOG_FILE_NAME!=null && LOG_FILE_NAME.length() > 0){
                 String path = File.separator + context.getPackageName() + File.separator  + LOG_DIR + File.separator ;
-                //File root = new File(Environment.getExternalStorageDirectory()+File.separator+ MainActivity.parentDir, MainActivity.logDir);
-                //File root = new File(Environment.getExternalStorageDirectory(), "Notes");
                 File root = createDirIfNotExists(path);
-                if (!root.exists())
+                if (root==null)
                 {
-                    root.mkdirs();
+                    return;
                 }
                 File gpxFile = new File(root, LOG_FILE_NAME);
 
