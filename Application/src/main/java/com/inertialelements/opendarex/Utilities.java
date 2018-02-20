@@ -32,7 +32,7 @@ import java.util.Locale;
 public class Utilities {
     private static final String LOG_DIR = "Log Files";
     private static String LOG_FILE_NAME = null;
-
+    public static final int REQUEST_PERMISSIONS_LOG_STORAGE = 1003;
     /**
      * Create log folder and file and write header to file
      *

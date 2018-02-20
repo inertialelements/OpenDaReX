@@ -77,6 +77,8 @@
     import java.util.List;
     import java.util.Locale;
 
+    import static com.inertialelements.opendarex.Utilities.REQUEST_PERMISSIONS_LOG_STORAGE;
+
     /**
      * For a given BLE device, this Activity provides the user interface to connect, display data,
      * and display GATT services and characteristics supported by the device.  The Activity
@@ -88,7 +90,6 @@
 
         public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
         public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
-        private static final int REQUEST_PERMISSIONS_LOG_STORAGE = 1003;
         private static final String send = "0x34 0x00 0x34";
         private static final String sys_off = "0x32 0x00 0x32";
         private static final String pro_off = "0x22 0x00 0x22";
