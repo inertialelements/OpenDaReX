@@ -61,8 +61,8 @@ public class Utilities {
 
             FileWriter writer = new FileWriter(gpxFile, true);
             //writer.append(" LOG FILE  "+"\n\n");
-            String header=String.format("%11s\t%9s\t%6s\t%6s\t%6s\t%6s\n\n",
-                    "TIME STAMP","STEP COUNT","X","Y","Z","Distance");
+            String header=String.format("%11s\t%9s\t%6s\t%6s\t%6s\t%7s\t%6s\n\n",
+                    "TIME STAMP","STEP COUNT","X","Y","Z","Heading","Distance");
             writer.append(header);
             writer.flush();
             writer.close();
@@ -154,9 +154,9 @@ public class Utilities {
 
                 FileWriter writer = new FileWriter(gpxFile,true);
                 //writer.append(" LOG FILE  "+"\n\n");"
-                String data=String.format("%11s\t%9s\t%6s\t%6s\t%6s\t%6s\n", formatter.format(now),stepData.getStepCounter(),
+                String data=String.format("%11s\t%9s\t%6s\t%6s\t%6s\t%6s\t%6s\n", formatter.format(now),stepData.getStepCounter(),
                         df3.format(stepData.getX()),df3.format(stepData.getY()),df3.format(stepData.getZ()),
-                        df3.format(stepData.getDistance()));
+                        df3.format(stepData.getHeading()), df3.format(stepData.getDistance()));
                 writer.append(data);
                 writer.flush();
                 writer.close();

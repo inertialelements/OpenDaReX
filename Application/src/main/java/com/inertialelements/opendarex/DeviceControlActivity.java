@@ -215,7 +215,7 @@
                         header[j] = buffer[i++] & 0xFF;          //HEADER ASSIGNED
                         Log.e(TAG,"h- " + header[j]);
                     }
-                    for(j=0;j<3;j++)
+                    for(j=0;j<4;j++)
                     {
                         for(int k=0;k<4;k++)
                             temp[k]=buffer[i++];
@@ -257,6 +257,7 @@
                             StepD = timeSec6/step_counter; //stepDuration
 
                             StepData stepData = new StepData(step_counter,final_data[0],final_data[1],final_data[2],distance);
+                            stepData.setHeading(x_sw[3]);
                             Utilities.writeDataToLog(getApplicationContext(),stepData);
                         }
                         package_number_old=package_number;

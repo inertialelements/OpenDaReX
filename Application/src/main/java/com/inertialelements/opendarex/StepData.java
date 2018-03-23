@@ -17,6 +17,7 @@ public class StepData {
     private double x;
     private double y;
     private double z;
+    private double heading;
     private int stepCounter;
     private double distance;
 
@@ -68,5 +69,12 @@ public class StepData {
         this.distance = distance;
     }
 
+    public double getHeading() {
+        return heading;
+    }
+
+    public void setHeading(double heading) {
+        this.heading = heading;
+    }
 
 }
